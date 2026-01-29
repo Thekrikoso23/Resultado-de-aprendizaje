@@ -131,3 +131,94 @@ tbody tr:nth-child(even) {
 .reserve-btn:hover {
     background-color: #e0b800;
 }
+
+/* login styles */
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+
+/* Fondo general */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #FFFFFF;
+}
+
+/* Contenedor principal */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Tarjeta */
+.card {
+  background: #FFFFFF;
+  padding: 32px;
+  width: 320px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(82, 101, 209, 0.25);
+  border-top: 6px solid #5265D1;
+}
+
+/* Título */
+.card h2 {
+  text-align: center;
+  color: #5265D1;
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.card input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #AAB7FF;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #2E2E2E;
+}
+
+.card input:focus {
+  outline: none;
+  border-color: #5265D1;
+  box-shadow: 0 0 5px #AAB7FF;
+}
+
+/* Botón */
+.card button {
+  width: 100%;
+  padding: 12px;
+  background: #F4C430;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #2E2E2E;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.card button:hover {
+  background: #e0b622;
+}
+
+/* Link inferior */
+.link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #2E2E2E;
+}
+
+.link a {
+  color: #5265D1;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link a:hover {
+  text-decoration: underline;
+}

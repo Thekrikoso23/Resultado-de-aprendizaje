@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <link rel="stylesheet" href="../vista/styles.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h2>Registro</h2>
+
+    <form action="../servicios/auth.php" method="POST">
+      <input type="text" name="name" placeholder="Nombre completo" required>
+      <input type="email" name="email" placeholder="Correo electrónico" required>
+      <input type="password" name="password" placeholder="Contraseña" required>
+
+      <input type="hidden" name="action" value="register">
+
+      <button type="submit">Registrarse</button>
+    </form>
+
+    <p class="link">
+      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
