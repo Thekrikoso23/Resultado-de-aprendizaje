@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Búsqueda de Vuelos</title>
+    <link rel="stylesheet" href="search.css">
+</head>
+<body>
+
+    <!-- Overlay general -->
+    <div class="page-overlay">
+
+        <!-- Contenedor principal -->
+        <div class="app-container">
+
+            <!-- Encabezado -->
+            <header class="header">
+                <h1>Búsqueda de Vuelos</h1>
+                <p>Encuentra el vuelo ideal para tu próximo viaje</p>
+            </header>
+
+            <!-- Contenedor del formulario -->
+            <section class="search-container">
+                <form class="search-form">
+
+                    <div class="form-group">
+                        <label for="origin">Origen</label>
+                        <input type="text" id="origin" placeholder="Ciudad de origen">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destination">Destino</label>
+                        <input type="text" id="destination" placeholder="Ciudad de destino">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Fecha</label>
+                        <input type="date" id="date">
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button type="submit">Buscar vuelos</button>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- Contenedor de resultados -->
+            <section class="results-container">
+                <h2>Resultados disponibles</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vuelo</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Fecha</th>
+                            <th>Precio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MX123</td>
+                            <td>Ciudad Juárez</td>
+                            <td>CDMX</td>
+                            <td>2026-02-10</td>
+                            <td>$2,500</td>
+                            <td>
+                                <button class="reserve-btn">Reservar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
