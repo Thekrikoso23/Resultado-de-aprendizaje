@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de vuelos</title>
+  <link rel="stylesheet" href="../vista/styles.css" />
+</head>
+<body>
+
+  <main class="contenedor-pagina">
+
+    <!-- Sidebar -->
+    <aside class="contenedor-sidebar">
+      <div class="contenedor-sidebar-seccion">
+        <div class="contenedor-logo">
+          <span class="contenedor-logo-cuadro"></span>
+          <span class="contenedor-logo-texto">Logo</span>
+        </div>
+      </div>
+
+      <div class="contenedor-sidebar-seccion">
+        <label class="contenedor-etiqueta-sidebar" for="buscador">Buscador</label>
+        <div class="contenedor-buscador">
+          <span class="contenedor-icono">🔎</span>
+          <input class="contenedor-input-sidebar" id="buscador" type="text" placeholder="Buscar..." />
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Contenido principal -->
+    <section class="contenedor-contenido">
+
+      <!-- ESTE ES EL GRID GENERAL DEL CONTENIDO -->
+      <div class="contenedor-panel">
+
+        <!-- ✅ BARRA SUPERIOR "NOMBRE" (ABARCA TODO) -->
+        <header class="contenedor-barra-nombre">
+          <div class="contenedor-barra-nombre-superior">
+            <h2 class="contenedor-barra-nombre-titulo">Nombre</h2>
+            <div class="contenedor-barra-nombre-logo">Logo</div>
+          </div>
+
+          <div class="contenedor-barra-nombre-linea"></div>
+
+          <div class="contenedor-barra-nombre-inferior">
+            <span class="contenedor-barra-nombre-letra">L</span>
+            <span class="contenedor-barra-nombre-separador">|</span>
+            <span class="contenedor-barra-nombre-texto">Consultas</span>
+          </div>
+        </header>
+
+        <!-- ✅ ABAJO IZQUIERDA: LISTA -->
+        <section class="contenedor-lista">
+
+          <article class="contenedor-tarjeta">
+            <div class="contenedor-tarjeta-info">
+              <p class="contenedor-tarjeta-texto"><strong>Fecha:</strong> 2026-02-10</p>
+              <p class="contenedor-tarjeta-texto"><strong>Aerolínea:</strong> MX Air</p>
+            </div>
+            <div class="contenedor-tarjeta-lado">
+              <div class="contenedor-tarjeta-preview"></div>
+              <button class="contenedor-boton-tarjeta" type="button">Ver</button>
+            </div>
+          </article>
+
+          <article class="contenedor-tarjeta">
+            <div class="contenedor-tarjeta-info">
+              <p class="contenedor-tarjeta-texto"><strong>Fecha:</strong> 2026-02-12</p>
+              <p class="contenedor-tarjeta-texto"><strong>Aerolínea:</strong> Juárez Sky</p>
+            </div>
+            <div class="contenedor-tarjeta-lado">
+              <div class="contenedor-tarjeta-preview"></div>
+              <button class="contenedor-boton-tarjeta" type="button">Ver</button>
+            </div>
+          </article>
+
+          <article class="contenedor-tarjeta">
+            <div class="contenedor-tarjeta-info">
+              <p class="contenedor-tarjeta-texto"><strong>Fecha:</strong> 2026-02-15</p>
+              <p class="contenedor-tarjeta-texto"><strong>Aerolínea:</strong> Norte Air</p>
+            </div>
+            <div class="contenedor-tarjeta-lado">
+              <div class="contenedor-tarjeta-preview"></div>
+              <button class="contenedor-boton-tarjeta" type="button">Ver</button>
+            </div>
+          </article>
+
+          <article class="contenedor-tarjeta">
+            <div class="contenedor-tarjeta-info">
+              <p class="contenedor-tarjeta-texto"><strong>Fecha:</strong> 2026-02-20</p>
+              <p class="contenedor-tarjeta-texto"><strong>Aerolínea:</strong> Centro Fly</p>
+            </div>
+            <div class="contenedor-tarjeta-lado">
+              <div class="contenedor-tarjeta-preview"></div>
+              <button class="contenedor-boton-tarjeta" type="button">Ver</button>
+            </div>
+          </article>
+
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
