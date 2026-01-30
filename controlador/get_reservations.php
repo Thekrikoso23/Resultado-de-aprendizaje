@@ -22,7 +22,6 @@ if (!$userId) {
   exit;
 }
 
-// Trae reservas + info del vuelo
 $sql = "
 SELECT 
   r.id AS reservation_id,

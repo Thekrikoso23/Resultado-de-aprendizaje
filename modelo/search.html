@@ -1,87 +1,182 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Búsqueda de Vuelos</title>
-    <link rel="stylesheet" href="../vista/styles.css">
+  <meta charset="UTF-8">
+  <title>Búsqueda de Vuelos</title>
+  <link rel="stylesheet" href="../vista/styles.css">
+
+  <!-- ✅ Guard: si no hay sesión, manda al login -->
+  <script>
+    (async () => {
+      try {
+        const res = await fetch("../controlador/check_session.php");
+        const data = await res.json();
+        if (!data.ok) window.location.href = "login.html";
+      } catch (e) {
+        window.location.href = "login.html";
+      }
+    })();
+  </script>
 </head>
+
 <body>
+  <div class="page-overlay">
+    <div class="app-container">
 
-    <!-- Overlay general -->
-    <div class="page-overlay">
+      <header class="header">
+        <h1>Búsqueda de Vuelos</h1>
+        <p>Encuentra el vuelo ideal para tu próximo viaje</p>
+      </header>
 
-        <!-- Contenedor principal -->
-        <div class="app-container">
+      <!-- ✅ FORM BIEN (con id) -->
+      <section class="search-container">
+        <form class="search-form" id="searchForm">
 
-            <!-- Encabezado -->
-            <header class="header">
-                <h1>Búsqueda de Vuelos</h1>
-                <p>Encuentra el vuelo ideal para tu próximo viaje</p>
-            </header>
-            
+          <div class="form-group">
+            <label for="origin">Origen</label>
+            <input type="text" id="origin" name="origin" placeholder="Ciudad de origen">
+          </div>
 
-            <!-- Contenedor del formulario -->
-            <section class="search-container">
-                <form class="search-form">
+          <div class="form-group">
+            <label for="destination">Destino</label>
+            <input type="text" id="destination" name="destination" placeholder="Ciudad de destino">
+          </div>
 
-                    <div class="form-group">
-                        <label for="origin">Origen</label>
-                        <input type="text" id="origin" placeholder="Ciudad de origen">
-                    </div>
+          <div class="form-group">
+            <label for="date">Fecha</label>
+            <input type="date" id="date" name="date">
+          </div>
 
-                    <div class="form-group">
-                        <label for="destination">Destino</label>
-                        <input type="text" id="destination" placeholder="Ciudad de destino">
-                    </div>
+          <div class="form-group button-group">
+            <button type="submit">Buscar vuelos</button>
+          </div>
 
-                    <div class="form-group">
-                        <label for="date">Fecha</label>
-                        <input type="date" id="date">
-                    </div>
+        </form>
+      </section>
 
-                    <div class="form-group button-group">
-                        <button type="submit">Buscar vuelos</button>
-                    </div>
+      <section class="results-container">
+        <h2>Resultados disponibles</h2>
 
-                </form>
-            </section>
+        <table>
+          <thead>
+            <tr>
+              <th>Vuelo</th>
+              <th>Origen</th>
+              <th>Destino</th>
+              <th>Fecha</th>
+              <th>Precio</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
 
-            <!-- Contenedor de resultados -->
-            <section class="results-container">
-                <h2>Resultados disponibles</h2>
+          <!-- ✅ aquí se llena dinámico -->
+          <tbody id="flightsBody">
+            <tr><td colspan="6">Escribe filtros y presiona “Buscar vuelos”.</td></tr>
+          </tbody>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Vuelo</th>
-                            <th>Origen</th>
-                            <th>Destino</th>
-                            <th>Fecha</th>
-                            <th>Precio</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>MX123</td>
-                            <td>Ciudad Juárez</td>
-                            <td>CDMX</td>
-                            <td>2026-02-10</td>
-                            <td>$2,500</td>
-                            <td>
-                                <button class="reserve-btn">Reservar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        <div class="contenedor-botones-search">
-            <a href="reservations.html" class="btn-regresar">Regresar</a>
-        </div>
-        </div>
+        </table>
+      </section>
+
+      <div class="contenedor-botones-search">
+        <a href="reservations.html" class="btn-regresar">Regresar</a>
+      </div>
 
     </div>
-    
+  </div>
 
+  <!-- ✅ JS funcional -->
+  <script>
+    const form = document.getElementById("searchForm");
+    const body = document.getElementById("flightsBody");
+
+    // Buscar
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const origin = document.getElementById("origin").value.trim();
+      const destination = document.getElementById("destination").value.trim();
+      const date = document.getElementById("date").value;
+
+      // ✅ usa TU endpoint real
+      const url = new URL("../controlador/search_flight.php", window.location.href);
+      if (origin) url.searchParams.set("origin", origin);
+      if (destination) url.searchParams.set("destination", destination);
+      if (date) url.searchParams.set("date", date);
+
+      body.innerHTML = `<tr><td colspan="6">Cargando...</td></tr>`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.ok) {
+          body.innerHTML = `<tr><td colspan="6">Error: ${data.error || "no se pudo cargar"}</td></tr>`;
+          return;
+        }
+
+        if (!data.flights || data.flights.length === 0) {
+          body.innerHTML = `<tr><td colspan="6">Sin resultados.</td></tr>`;
+          return;
+        }
+
+        body.innerHTML = data.flights.map(f => `
+          <tr>
+            <td>${f.flight_code}</td>
+            <td>${f.origin}</td>
+            <td>${f.destination}</td>
+            <td>${f.flight_date}</td>
+            <td>$${Number(f.price).toLocaleString()}</td>
+            <td>
+              <button class="reserve-btn" data-id="${f.id}">Reservar</button>
+            </td>
+          </tr>
+        `).join("");
+
+      } catch (err) {
+        console.error(err);
+        body.innerHTML = `<tr><td colspan="6">Error de servidor.</td></tr>`;
+      }
+    });
+
+    // Reservar
+    body.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".reserve-btn");
+      if (!btn) return;
+
+      const flightId = btn.dataset.id;
+      btn.disabled = true;
+      btn.textContent = "Reservando...";
+
+      try {
+        const fd = new FormData();
+        fd.append("flight_id", flightId);
+
+        const res = await fetch("../controlador/reserve_flight.php", {
+          method: "POST",
+          body: fd
+        });
+
+        // ✅ IMPORTANTÍSIMO: tu reserve_flight.php ahorita devuelve texto, no JSON
+        // así que lo leemos como texto:
+        const text = await res.text();
+
+        // si quieres JSON, hay que cambiar reserve_flight.php (te lo hago si quieres)
+        if (res.ok) {
+          alert("Reserva creada ✅");
+          window.location.href = "reservations.html";
+        } else {
+          alert("No se pudo reservar ❌\n" + text);
+          btn.disabled = false;
+          btn.textContent = "Reservar";
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Error de servidor ❌");
+        btn.disabled = false;
+        btn.textContent = "Reservar";
+      }
+    });
+  </script>
 </body>
 </html>
