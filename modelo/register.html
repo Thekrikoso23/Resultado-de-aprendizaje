@@ -11,13 +11,10 @@
   <div class="card">
     <h2>Registro</h2>
 
-    <form action="../servicios/auth.php" method="POST">
+    <form id="registerForm">
       <input type="text" name="name" placeholder="Nombre completo" required>
       <input type="email" name="email" placeholder="Correo electrónico" required>
       <input type="password" name="password" placeholder="Contraseña" required>
-
-      <input type="hidden" name="action" value="register">
-
       <button type="submit">Registrarse</button>
     </form>
 
@@ -26,6 +23,43 @@
     </p>
   </div>
 </div>
+
+<script>
+  const registerForm = document.getElementById("registerForm");
+
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(registerForm);
+    formData.append("action", "register");
+
+    try {
+      const res = await fetch("../controlador/auth.php", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        alert("Registro exitoso ✅");
+        window.location.href = "login.html?registered=1";
+      } else {
+        // puedes personalizar mensajes según data.error
+        if (data.error === "db") {
+          alert("No se pudo registrar ❌ (posible correo duplicado)");
+        } else if (data.error === "missing") {
+          alert("Faltan datos ❌");
+        } else {
+          alert("No se pudo registrar ❌");
+        }
+      }
+    } catch (err) {
+      alert("Error de conexión con el servidor ❌");
+      console.error(err);
+    }
+  });
+</script>
 
 </body>
 </html>

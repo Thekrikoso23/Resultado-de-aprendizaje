@@ -1,68 +1,98 @@
 <?php
-$servername = "localhost";
+session_start();
+
+$servername = "127.0.0.1";
 $username = "root";
 $password = "";
 $dbname = "flight_reservation";
+$port = 3307;
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-// Verificar conexión
+header("Content-Type: application/json; charset=utf-8");
+
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    http_response_code(500);
+    echo json_encode(["ok" => false, "error" => "DB connection failed"]);
+    exit;
 }
 
-header("Content-Type: application/json");
-
-$action = $_POST['action'] ?? "";
+$action = $_POST["action"] ?? "";
 
 // =====================
 // REGISTRO
 // =====================
-if ($action == "register") {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $pass = password_hash($_POST['password'], PASSWORD_BCRYPT);
+if ($action === "register") {
+    $name  = trim($_POST["name"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $plain = $_POST["password"] ?? "";
 
-    $sql = "INSERT INTO Users (name, email, password) VALUES ('$name', '$email', '$pass')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(["ok" => true, "msg" => "Registro exitoso"]);
-    } else {
-        echo json_encode(["ok" => false, "error" => $conn->error]);
+    if ($name === "" || $email === "" || $plain === "") {
+        echo json_encode(["ok" => false, "error" => "missing"]);
+        exit;
     }
-    exit;
+
+    $hash = password_hash($plain, PASSWORD_BCRYPT);
+
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+    if (!$stmt) {
+        http_response_code(500);
+        echo json_encode(["ok" => false, "error" => "prepare_failed"]);
+        exit;
+    }
+
+    $stmt->bind_param("sss", $name, $email, $hash);
+
+    if ($stmt->execute()) {
+        echo json_encode(["ok" => true, "msg" => "Registro exitoso"]);
+        exit;
+    } else {
+        // Puede ser correo duplicado u otro error
+        echo json_encode(["ok" => false, "error" => "db"]);
+        exit;
+    }
 }
 
 // =====================
 // LOGIN
 // =====================
-if ($action == "login") {
-    $email = $_POST['email'];
-    $pass = $_POST['password'];
+if ($action === "login") {
+    $email = trim($_POST["email"] ?? "");
+    $plain = $_POST["password"] ?? "";
 
-    $sql = "SELECT id, name, email, password FROM Users WHERE email='$email'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-
-        if (password_verify($pass, $row['password'])) {
-            echo json_encode([
-                "ok" => true,
-                "user_id" => $row["id"],
-                "name" => $row["name"],
-                "email" => $row["email"]
-            ]);
-        } else {
-            echo json_encode(["ok" => false, "error" => "Contraseña incorrecta"]);
-        }
-    } else {
-        echo json_encode(["ok" => false, "error" => "Usuario no existe"]);
+    if ($email === "" || $plain === "") {
+        echo json_encode(["ok" => false, "error" => "missing"]);
+        exit;
     }
+
+    $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
+    if (!$stmt) {
+        http_response_code(500);
+        echo json_encode(["ok" => false, "error" => "prepare_failed"]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($row = $res->fetch_assoc()) {
+        if (password_verify($plain, $row["password"])) {
+            // ✅ Guardamos sesión
+            $_SESSION["user_id"] = (int)$row["id"];
+            $_SESSION["user_name"] = $row["name"];
+
+            echo json_encode(["ok" => true, "msg" => "Login exitoso"]);
+            exit;
+        }
+    }
+
+    echo json_encode(["ok" => false, "error" => "bad"]);
     exit;
 }
 
-echo json_encode(["ok" => false, "error" => "Acción no válida"]);
-
-$conn->close();
-?>
+// =====================
+// ACCIÓN NO VÁLIDA
+// =====================
+echo json_encode(["ok" => false, "error" => "action"]);
+exit;

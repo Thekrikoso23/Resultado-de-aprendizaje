@@ -11,12 +11,14 @@
   <div class="card">
     <h2>Iniciar Sesión</h2>
 
-    <form action="../servicios/auth.php" method="POST">
+    <script>
+      const p = new URLSearchParams(location.search);
+      if (p.get("registered") === "1") alert("Registro exitoso ✅ Ahora inicia sesión");
+    </script>
+
+    <form id="loginForm">
       <input type="email" name="email" placeholder="Correo electrónico" required>
       <input type="password" name="password" placeholder="Contraseña" required>
-
-      <input type="hidden" name="action" value="login">
-
       <button type="submit">Entrar</button>
     </form>
 
@@ -25,6 +27,35 @@
     </p>
   </div>
 </div>
+
+<script>
+  const loginForm = document.getElementById("loginForm");
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(loginForm);
+    formData.append("action", "login");
+
+    try {
+      const res = await fetch("../controlador/auth.php", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        window.location.href = "reservations.html";
+      } else {
+        alert("Login inválido ❌ Revisa tu correo o contraseña");
+      }
+    } catch (err) {
+      alert("Error de conexión con el servidor ❌");
+      console.error(err);
+    }
+  });
+</script>
 
 </body>
 </html>
